@@ -172,3 +172,40 @@ body {
   font-size: 0.78rem;
   line-height: 1.5;
 }
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: var(--bg-input);
+}
+
+.estado .punto {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.estado.conectado { color: var(--verde); }
+.estado.conectando { color: var(--acento); }
+.estado.desconectado,
+.estado.error { color: var(--rojo); }
+
+.card-footer {
+  margin-top: 1rem;
+  text-align: center;
+  color: var(--texto-tenue);
+  font-size: 0.78rem;
+}

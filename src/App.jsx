@@ -27,11 +27,18 @@ const fmtUSD = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 2,
 })
 
+const ESTADOS = {
+  conectando: { texto: 'Conectando…', clase: 'conectando' },
+  conectado: { texto: 'En vivo', clase: 'conectado' },
+  desconectado: { texto: 'Desconectado', clase: 'desconectado' },
+  error: { texto: 'Error de conexión', clase: 'error' },
+}
+
 export default function App() {
   const [cripto, setCripto] = useState(CRIPTOS[0])
   const [tc, setTc] = useState(TC_OFICIAL_DEFECTO)
   const [cantidad, setCantidad] = useState(1)
-  const { price, prevPrice } = useCryptoPrice(cripto.symbol)
+  const { price, prevPrice, status, lastUpdate } = useCryptoPrice(cripto.symbol)
 
   const precioBOB = price != null ? price * tc : null
   const totalUSD = price != null ? price * cantidad : null
@@ -43,6 +50,8 @@ export default function App() {
     if (price < prevPrice) return 'baja'
     return 'neutral'
   }, [price, prevPrice])
+
+  const estado = ESTADOS[status] || ESTADOS.conectando
 
   return (
     <div className="app">
@@ -65,11 +74,17 @@ export default function App() {
       </div>
 
       <main className="card">
-        <div className="moneda">
-          <span style={{ color: cripto.color }}>{cripto.icono}</span>
-          <div>
-            <div className="moneda-nombre">{cripto.nombre}</div>
-            <div className="moneda-par">{cripto.symbol}</div>
+        <div className="card-top">
+          <div className="moneda">
+            <span style={{ color: cripto.color }}>{cripto.icono}</span>
+            <div>
+              <div className="moneda-nombre">{cripto.nombre}</div>
+              <div className="moneda-par">{cripto.symbol}</div>
+            </div>
+          </div>
+          <div className={`estado ${estado.clase}`}>
+            <span className="punto" />
+            {estado.texto}
           </div>
         </div>
 
@@ -113,6 +128,11 @@ export default function App() {
             <strong>{totalBOB != null ? fmtBOB.format(totalBOB) : '—'}</strong>
           </div>
         </div>
+        <footer className="card-footer">
+          {lastUpdate
+            ? `Última actualización: ${new Date(lastUpdate).toLocaleTimeString('es-BO')}`
+            : 'Sin datos todavía'}
+        </footer>
       </main>
 
       <p className="nota">
