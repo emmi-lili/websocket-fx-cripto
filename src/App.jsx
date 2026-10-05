@@ -11,7 +11,17 @@ const CRIPTOS = [
   { symbol: 'DOGEUSDT', nombre: 'Dogecoin', icono: 'DOGE', color: '#c2a633' },
 ]
 
-const TC_OFICIAL_DEFECTO = 6.96
+const TC = {
+  oficial: { id: 'oficial', label: 'Oficial', value: 6.96 },
+  paralelo: { id: 'paralelo', label: 'Paralelo', value: 12.8 },
+}
+
+const ESTADOS = {
+  conectando: { texto: 'Conectando…', clase: 'conectando' },
+  conectado: { texto: 'En vivo', clase: 'conectado' },
+  desconectado: { texto: 'Desconectado', clase: 'desconectado' },
+  error: { texto: 'Error de conexión', clase: 'error' },
+}
 
 const fmtBOB = new Intl.NumberFormat('es-BO', {
   style: 'currency',
@@ -27,16 +37,10 @@ const fmtUSD = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 2,
 })
 
-const ESTADOS = {
-  conectando: { texto: 'Conectando…', clase: 'conectando' },
-  conectado: { texto: 'En vivo', clase: 'conectado' },
-  desconectado: { texto: 'Desconectado', clase: 'desconectado' },
-  error: { texto: 'Error de conexión', clase: 'error' },
-}
-
 export default function App() {
   const [cripto, setCripto] = useState(CRIPTOS[0])
-  const [tc, setTc] = useState(TC_OFICIAL_DEFECTO)
+  const [modoTc, setModoTc] = useState('oficial')
+  const [tc, setTc] = useState(TC.oficial.value)
   const [cantidad, setCantidad] = useState(1)
   const { price, prevPrice, status, lastUpdate } = useCryptoPrice(cripto.symbol)
 
@@ -52,6 +56,11 @@ export default function App() {
   }, [price, prevPrice])
 
   const estado = ESTADOS[status] || ESTADOS.conectando
+
+  function elegirTc(modo) {
+    setModoTc(modo)
+    setTc(TC[modo].value)
+  }
 
   return (
     <div className="app">
@@ -108,12 +117,28 @@ export default function App() {
           </div>
           <div className="campo">
             <label>Tipo de cambio (USD → BOB)</label>
+            <div className="tc-toggle">
+              {Object.values(TC).map((opt) => (
+                <button
+                  key={opt.id}
+                  type="button"
+                  className={modoTc === opt.id ? 'on' : ''}
+                  onClick={() => elegirTc(opt.id)}
+                >
+                  {opt.label}: {opt.value.toFixed(2)}
+                </button>
+              ))}
+            </div>
             <input
               type="number"
               min="0"
               step="0.01"
               value={tc}
-              onChange={(e) => setTc(parseFloat(e.target.value) || 0)}
+              onChange={(e) => {
+                const n = parseFloat(e.target.value) || 0
+                setTc(n)
+                setModoTc('custom')
+              }}
             />
           </div>
         </div>
@@ -128,6 +153,7 @@ export default function App() {
             <strong>{totalBOB != null ? fmtBOB.format(totalBOB) : '—'}</strong>
           </div>
         </div>
+
         <footer className="card-footer">
           {lastUpdate
             ? `Última actualización: ${new Date(lastUpdate).toLocaleTimeString('es-BO')}`
@@ -136,7 +162,7 @@ export default function App() {
       </main>
 
       <p className="nota">
-        El tipo de cambio a bolivianos es editable: ajústalo al oficial o al del mercado que uses.
+        Elige el tipo de cambio Oficial (BCB) o Paralelo (P2P), o ajústalo manualmente.
       </p>
     </div>
   )
