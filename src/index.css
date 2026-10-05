@@ -1,4 +1,116 @@
-body {
+:root {
+  --bg: #0b1020;
+  --bg-card: #151c32;
+  --bg-input: #0d1428;
+  --borde: #26304f;
+  --texto: #e7ecf5;
+  --texto-tenue: #8893ad;
+  --verde: #16c784;
+  --rojo: #ea3943;
+  --acento: #6c8cff;
+}
+
+* {
+  box-sizing: border-box;
   margin: 0;
-  font-family: system-ui, sans-serif;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: radial-gradient(1200px 600px at 50% -10%, #1a2342 0%, var(--bg) 60%);
+  color: var(--texto);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.app {
+  width: 100%;
+  max-width: 520px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.header h1 {
+  font-size: 1.9rem;
+}
+
+.sub {
+  color: var(--texto-tenue);
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+  padding: 1.5rem;
+}
+
+.precio-principal {
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: 0.35rem;
+}
+
+.precio-usd {
+  color: var(--texto-tenue);
+  margin-bottom: 1.25rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.campo label {
+  font-size: 0.75rem;
+  color: var(--texto-tenue);
+  font-weight: 600;
+}
+
+.campo input {
+  background: var(--bg-input);
+  border: 1.5px solid var(--borde);
+  border-radius: 10px;
+  padding: 0.7rem 0.8rem;
+  color: var(--texto);
+  font-size: 1rem;
+  font-weight: 600;
+  outline: none;
+}
+
+.resultado {
+  background: var(--bg-input);
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+}
+
+.resultado-fila {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
+.resultado-fila span {
+  color: var(--texto-tenue);
+}
+
+.resultado-fila.destacado {
+  border-top: 1px solid var(--borde);
+  margin-top: 0.3rem;
+  padding-top: 0.8rem;
+}
+
+.resultado-fila.destacado strong {
+  font-size: 1.35rem;
+  color: var(--verde);
 }
