@@ -11,6 +11,8 @@ const CRIPTOS = [
   { symbol: 'DOGEUSDT', nombre: 'Dogecoin', icono: 'DOGE', color: '#c2a633' },
 ]
 
+const QUICK = [0.1, 0.5, 1, 5]
+
 const TC = {
   oficial: { id: 'oficial', label: 'Oficial', value: 6.96 },
   paralelo: { id: 'paralelo', label: 'Paralelo', value: 12.8 },
@@ -106,7 +108,21 @@ export default function App() {
 
         <div className="conversor">
           <div className="campo">
-            <label>Cantidad de {cripto.nombre}</label>
+            <div className="campo-label-row">
+              <label>Cantidad de {cripto.nombre}</label>
+              <div className="quick">
+                {QUICK.map((q) => (
+                  <button
+                    key={q}
+                    type="button"
+                    className={cantidad === q ? 'on' : ''}
+                    onClick={() => setCantidad(q)}
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+            </div>
             <input
               type="number"
               min="0"

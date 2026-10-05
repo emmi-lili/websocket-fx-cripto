@@ -232,3 +232,32 @@ body {
   border-color: var(--acento);
   color: var(--texto);
 }
+
+.campo-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.quick {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.quick button {
+  border: 1px solid var(--borde);
+  background: var(--bg-input);
+  color: var(--texto-tenue);
+  border-radius: 8px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.quick button.on {
+  border-color: var(--acento);
+  color: var(--texto);
+}
