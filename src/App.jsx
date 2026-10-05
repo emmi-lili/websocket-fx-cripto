@@ -1,5 +1,15 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useCryptoPrice } from './useCryptoPrice'
+
+const CRIPTOS = [
+  { symbol: 'BTCUSDT', nombre: 'Bitcoin', icono: '₿', color: '#f7931a' },
+  { symbol: 'ETHUSDT', nombre: 'Ethereum', icono: 'Ξ', color: '#627eea' },
+  { symbol: 'BNBUSDT', nombre: 'BNB', icono: 'BNB', color: '#f3ba2f' },
+  { symbol: 'SOLUSDT', nombre: 'Solana', icono: 'SOL', color: '#14f195' },
+  { symbol: 'XRPUSDT', nombre: 'XRP', icono: 'XRP', color: '#23292f' },
+  { symbol: 'ADAUSDT', nombre: 'Cardano', icono: 'ADA', color: '#0033ad' },
+  { symbol: 'DOGEUSDT', nombre: 'Dogecoin', icono: 'DOGE', color: '#c2a633' },
+]
 
 const TC_OFICIAL = 6.96
 
@@ -18,11 +28,19 @@ const fmtUSD = new Intl.NumberFormat('en-US', {
 })
 
 export default function App() {
+  const [cripto, setCripto] = useState(CRIPTOS[0])
   const [cantidad, setCantidad] = useState(1)
-  const { price } = useCryptoPrice('BTCUSDT')
+  const { price, prevPrice } = useCryptoPrice(cripto.symbol)
 
   const totalUSD = price != null ? price * cantidad : null
   const totalBOB = totalUSD != null ? totalUSD * TC_OFICIAL : null
+
+  const tendencia = useMemo(() => {
+    if (price == null || prevPrice == null) return 'neutral'
+    if (price > prevPrice) return 'sube'
+    if (price < prevPrice) return 'baja'
+    return 'neutral'
+  }, [price, prevPrice])
 
   return (
     <div className="app">
@@ -31,8 +49,29 @@ export default function App() {
         <p className="sub">Precios en tiempo real vía WebSocket de Binance</p>
       </header>
 
+      <div className="selector">
+        {CRIPTOS.map((c) => (
+          <button
+            key={c.symbol}
+            className={`chip ${c.symbol === cripto.symbol ? 'activo' : ''}`}
+            style={c.symbol === cripto.symbol ? { borderColor: c.color, color: c.color } : undefined}
+            onClick={() => setCripto(c)}
+          >
+            {c.nombre}
+          </button>
+        ))}
+      </div>
+
       <main className="card">
-        <div className="precio-principal">
+        <div className="moneda">
+          <span style={{ color: cripto.color }}>{cripto.icono}</span>
+          <div>
+            <div className="moneda-nombre">{cripto.nombre}</div>
+            <div className="moneda-par">{cripto.symbol}</div>
+          </div>
+        </div>
+
+        <div className={`precio-principal ${tendencia}`}>
           {price != null ? fmtBOB.format(price * TC_OFICIAL) : 'Esperando precio…'}
         </div>
         <div className="precio-usd">
@@ -40,7 +79,7 @@ export default function App() {
         </div>
 
         <div className="campo">
-          <label>Cantidad de Bitcoin</label>
+          <label>Cantidad de {cripto.nombre}</label>
           <input
             type="number"
             min="0"

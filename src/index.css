@@ -114,3 +114,46 @@ body {
   font-size: 1.35rem;
   color: var(--verde);
 }
+
+.selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.chip {
+  padding: 0.5rem 0.85rem;
+  background: var(--bg-card);
+  border: 1.5px solid var(--borde);
+  border-radius: 999px;
+  color: var(--texto-tenue);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chip.activo {
+  background: #1d2748;
+  color: var(--texto);
+}
+
+.moneda {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.moneda-nombre {
+  font-weight: 700;
+}
+
+.moneda-par {
+  color: var(--texto-tenue);
+  font-size: 0.8rem;
+}
+
+.precio-principal.sube { color: var(--verde); }
+.precio-principal.baja { color: var(--rojo); }
