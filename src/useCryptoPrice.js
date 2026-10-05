@@ -69,3 +69,118 @@ export function useCryptoPrice(symbol) {
 
   return { price, prevPrice, status, lastUpdate }
 }
+
+/**
+ * Variación 24h + min/max desde el ticker REST de Binance.
+ */
+export function useTicker24h(symbol) {
+  const [data, setData] = useState(null)
+
+  useEffect(() => {
+    if (!symbol) return
+    let cancelado = false
+
+    async function cargar() {
+      try {
+        const res = await fetch(
+          `https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`
+        )
+        if (!res.ok) return
+        const json = await res.json()
+        if (cancelado) return
+        setData({
+          changePct: parseFloat(json.priceChangePercent),
+          high: parseFloat(json.highPrice),
+          low: parseFloat(json.lowPrice),
+        })
+      } catch {
+        /* silencioso: el chart puede vivir sin esto */
+      }
+    }
+
+    cargar()
+    const id = setInterval(cargar, 60_000)
+    return () => {
+      cancelado = true
+      clearInterval(id)
+    }
+  }, [symbol])
+
+  return data
+}
+
+/**
+ * Velas 1h de las últimas 24h para el sparkline.
+ */
+export function useKlines(symbol) {
+  const [points, setPoints] = useState([])
+
+  useEffect(() => {
+    if (!symbol) return
+    let cancelado = false
+
+    async function cargar() {
+      try {
+        const res = await fetch(
+          `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=1h&limit=24`
+        )
+        if (!res.ok) return
+        const json = await res.json()
+        if (cancelado) return
+        setPoints(json.map((k) => parseFloat(k[4])))
+      } catch {
+        /* silencioso */
+      }
+    }
+
+    cargar()
+    const id = setInterval(cargar, 5 * 60_000)
+    return () => {
+      cancelado = true
+      clearInterval(id)
+    }
+  }, [symbol])
+
+  return points
+}
+
+/**
+ * Cotizaciones auxiliares (REST, polling suave).
+ */
+export function useSideQuotes(symbols) {
+  const [quotes, setQuotes] = useState({})
+  const key = symbols.join(',')
+
+  useEffect(() => {
+    if (!symbols?.length) return
+    let cancelado = false
+
+    async function cargar() {
+      try {
+        const entries = await Promise.all(
+          symbols.map(async (symbol) => {
+            const res = await fetch(
+              `https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`
+            )
+            if (!res.ok) return [symbol, null]
+            const json = await res.json()
+            return [symbol, parseFloat(json.price)]
+          })
+        )
+        if (cancelado) return
+        setQuotes(Object.fromEntries(entries))
+      } catch {
+        /* silencioso */
+      }
+    }
+
+    cargar()
+    const id = setInterval(cargar, 15_000)
+    return () => {
+      cancelado = true
+      clearInterval(id)
+    }
+  }, [key])
+
+  return quotes
+}
