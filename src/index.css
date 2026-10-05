@@ -157,3 +157,18 @@ body {
 
 .precio-principal.sube { color: var(--verde); }
 .precio-principal.baja { color: var(--rojo); }
+
+.conversor {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.nota {
+  margin-top: 1.25rem;
+  text-align: center;
+  color: var(--texto-tenue);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}

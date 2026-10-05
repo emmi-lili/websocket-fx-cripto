@@ -11,7 +11,7 @@ const CRIPTOS = [
   { symbol: 'DOGEUSDT', nombre: 'Dogecoin', icono: 'DOGE', color: '#c2a633' },
 ]
 
-const TC_OFICIAL = 6.96
+const TC_OFICIAL_DEFECTO = 6.96
 
 const fmtBOB = new Intl.NumberFormat('es-BO', {
   style: 'currency',
@@ -29,11 +29,13 @@ const fmtUSD = new Intl.NumberFormat('en-US', {
 
 export default function App() {
   const [cripto, setCripto] = useState(CRIPTOS[0])
+  const [tc, setTc] = useState(TC_OFICIAL_DEFECTO)
   const [cantidad, setCantidad] = useState(1)
   const { price, prevPrice } = useCryptoPrice(cripto.symbol)
 
+  const precioBOB = price != null ? price * tc : null
   const totalUSD = price != null ? price * cantidad : null
-  const totalBOB = totalUSD != null ? totalUSD * TC_OFICIAL : null
+  const totalBOB = precioBOB != null ? precioBOB * cantidad : null
 
   const tendencia = useMemo(() => {
     if (price == null || prevPrice == null) return 'neutral'
@@ -72,21 +74,33 @@ export default function App() {
         </div>
 
         <div className={`precio-principal ${tendencia}`}>
-          {price != null ? fmtBOB.format(price * TC_OFICIAL) : 'Esperando precio…'}
+          {precioBOB != null ? fmtBOB.format(precioBOB) : 'Esperando precio…'}
         </div>
         <div className="precio-usd">
           {price != null ? `${fmtUSD.format(price)} USD` : '—'}
         </div>
 
-        <div className="campo">
-          <label>Cantidad de {cripto.nombre}</label>
-          <input
-            type="number"
-            min="0"
-            step="any"
-            value={cantidad}
-            onChange={(e) => setCantidad(parseFloat(e.target.value) || 0)}
-          />
+        <div className="conversor">
+          <div className="campo">
+            <label>Cantidad de {cripto.nombre}</label>
+            <input
+              type="number"
+              min="0"
+              step="any"
+              value={cantidad}
+              onChange={(e) => setCantidad(parseFloat(e.target.value) || 0)}
+            />
+          </div>
+          <div className="campo">
+            <label>Tipo de cambio (USD → BOB)</label>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={tc}
+              onChange={(e) => setTc(parseFloat(e.target.value) || 0)}
+            />
+          </div>
         </div>
 
         <div className="resultado">
@@ -100,6 +114,10 @@ export default function App() {
           </div>
         </div>
       </main>
+
+      <p className="nota">
+        El tipo de cambio a bolivianos es editable: ajústalo al oficial o al del mercado que uses.
+      </p>
     </div>
   )
 }
