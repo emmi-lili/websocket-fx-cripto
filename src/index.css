@@ -100,46 +100,37 @@ a {
   justify-content: flex-end;
 }
 
-.ws-pill {
+.ws-status {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.4rem 0.75rem;
-  border-radius: 999px;
-  background: var(--surface);
-  border: 1px solid var(--line);
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--ink-soft);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
-.ws-pill .punto {
+.ws-status .punto {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: currentColor;
 }
 
-.ws-pill.conectado {
+.ws-status.conectado {
   color: var(--up);
-  background: var(--up-soft);
-  border-color: #a7f3d0;
 }
 
-.ws-pill.conectado .punto {
+.ws-status.conectado .punto {
   animation: pulse 1.4s ease-in-out infinite;
 }
 
-.ws-pill.conectando {
+.ws-status.conectando {
   color: var(--brand);
 }
 
-.ws-pill.desconectado,
-.ws-pill.error {
+.ws-status.desconectado,
+.ws-status.error {
   color: var(--down);
-  background: var(--down-soft);
-  border-color: #fecaca;
 }
 
 .actualizado {
@@ -275,41 +266,19 @@ a {
   margin-top: 0.1rem;
 }
 
-.badges {
-  display: flex;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.28rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.72rem;
+.change {
+  font-size: 0.86rem;
   font-weight: 700;
-  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-.pill.live {
-  background: var(--up-soft);
+.change.up {
   color: var(--up);
 }
 
-.pill.up {
-  background: var(--up-soft);
-  color: var(--up);
-}
-
-.pill.down {
-  background: var(--down-soft);
+.change.down {
   color: var(--down);
-}
-
-.pill.muted {
-  background: #f1f5f9;
-  color: var(--ink-soft);
 }
 
 /* ——— Price ——— */
@@ -423,35 +392,6 @@ a {
   border-color: #c7d2fe;
   background: var(--brand-soft);
   color: var(--brand);
-}
-
-.tc-toggle {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.45rem;
-}
-
-.tc-toggle button {
-  border: 1.5px solid var(--line);
-  background: #fff;
-  color: var(--ink-soft);
-  border-radius: 10px;
-  padding: 0.65rem 0.75rem;
-  font-size: 0.84rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.tc-toggle button:hover {
-  border-color: var(--line-strong);
-  color: var(--ink);
-}
-
-.tc-toggle button.on {
-  border-color: #93c5fd;
-  background: #eff6ff;
-  color: #1d4ed8;
 }
 
 .tc-input {
@@ -577,14 +517,41 @@ a {
   font-variant-numeric: tabular-nums;
 }
 
-.refs,
+.bcb-ref {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.bcb-ref strong {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.bcb-ref small {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.bcb-ref em {
+  font-style: normal;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
 .quotes {
   list-style: none;
   display: grid;
   gap: 0.65rem;
 }
 
-.refs li,
 .quotes li {
   display: flex;
   justify-content: space-between;
@@ -594,54 +561,6 @@ a {
   border: 1px solid var(--line);
   border-radius: 12px;
   background: #fafbfc;
-}
-
-.refs li.highlight {
-  background: var(--up-soft);
-  border-color: #a7f3d0;
-}
-
-.refs strong {
-  display: block;
-  font-size: 0.86rem;
-  font-weight: 700;
-}
-
-.refs small {
-  color: var(--muted);
-  font-size: 0.72rem;
-}
-
-.refs-right {
-  text-align: right;
-  display: grid;
-  gap: 0.25rem;
-  justify-items: end;
-}
-
-.refs-right em {
-  font-style: normal;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  font-size: 0.95rem;
-}
-
-.tag {
-  display: inline-flex;
-  padding: 0.15rem 0.45rem;
-  border-radius: 999px;
-  font-size: 0.68rem;
-  font-weight: 700;
-}
-
-.tag.muted {
-  background: #e2e8f0;
-  color: var(--ink-soft);
-}
-
-.tag.live {
-  background: #d1fae5;
-  color: var(--up);
 }
 
 .quote-left {
@@ -718,7 +637,4 @@ a {
     flex-direction: column;
   }
 
-  .tc-toggle {
-    grid-template-columns: 1fr;
-  }
 }

@@ -16,10 +16,8 @@ const CRIPTOS = [
   { symbol: 'DOGEUSDT', nombre: 'Dogecoin', short: 'DOGE', color: '#c2a633' },
 ]
 
-const TC = {
-  oficial: { id: 'oficial', label: 'Oficial', value: 6.96, hint: 'BCB' },
-  paralelo: { id: 'paralelo', label: 'Paralelo', value: 12.8, hint: 'P2P / USDT' },
-}
+/** Tipo de cambio referencial BCB (USD → BOB). */
+const TC_BCB = 6.96
 
 const QUICK = [0.1, 0.5, 1, 5]
 const SIDE_SYMBOLS = ['ETHUSDT', 'SOLUSDT']
@@ -173,8 +171,7 @@ function tiempoRelativo(ts) {
 
 export default function App() {
   const [cripto, setCripto] = useState(CRIPTOS[0])
-  const [modoTc, setModoTc] = useState('oficial')
-  const [tc, setTc] = useState(TC.oficial.value)
+  const [tc, setTc] = useState(TC_BCB)
   const [cantidad, setCantidad] = useState(1)
 
   const { price, prevPrice, status, lastUpdate } = useCryptoPrice(cripto.symbol)
@@ -195,19 +192,6 @@ export default function App() {
 
   const changePct = ticker?.changePct
   const estado = ESTADOS[status] || ESTADOS.conectando
-
-  function elegirTc(modo) {
-    setModoTc(modo)
-    setTc(TC[modo].value)
-  }
-
-  function onTcChange(value) {
-    const n = parseFloat(value)
-    setTc(Number.isFinite(n) ? n : 0)
-    if (Math.abs(n - TC.oficial.value) < 0.001) setModoTc('oficial')
-    else if (Math.abs(n - TC.paralelo.value) < 0.001) setModoTc('paralelo')
-    else setModoTc('custom')
-  }
 
   const otras = [
     {
@@ -253,12 +237,11 @@ export default function App() {
           </div>
           <div className="brand-text">
             <span className="brand-name">CriptoBOB</span>
-            <span className="pill live">En Vivo</span>
           </div>
         </div>
 
         <div className="topbar-status">
-          <div className={`ws-pill ${estado.clase}`}>
+          <div className={`ws-status ${estado.clase}`}>
             <span className="punto" />
             {estado.texto}
           </div>
@@ -268,7 +251,7 @@ export default function App() {
 
       <section className="hero-copy">
         <h1>Cripto → Bolivianos</h1>
-        <p>Conversor en tiempo real vía WebSocket de Binance. Tipo de cambio editable.</p>
+        <p>Conversor en tiempo real vía WebSocket de Binance. Tipo de cambio referencial BCB.</p>
       </section>
 
       <nav className="selector" aria-label="Seleccionar criptomoneda">
@@ -305,16 +288,11 @@ export default function App() {
                 <div className="moneda-meta">Par Binance · USDT ≈ USD</div>
               </div>
             </div>
-            <div className="badges">
-              <span className={`pill ${status === 'conectado' ? 'live' : 'muted'}`}>
-                {status === 'conectado' ? 'En vivo' : estado.texto}
+            {changePct != null && (
+              <span className={`change ${changePct >= 0 ? 'up' : 'down'}`}>
+                {fmtPct.format(changePct)}%
               </span>
-              {changePct != null && (
-                <span className={`pill ${changePct >= 0 ? 'up' : 'down'}`}>
-                  {fmtPct.format(changePct)}%
-                </span>
-              )}
-            </div>
+            )}
           </div>
 
           <div className={`precio-principal ${tendencia}`}>
@@ -364,30 +342,19 @@ export default function App() {
             </div>
 
             <div className="campo">
-              <label>Tipo de cambio (USD → BOB)</label>
-              <div className="tc-toggle" role="group" aria-label="Tipo de cambio">
-                {Object.values(TC).map((opt) => (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    className={modoTc === opt.id ? 'on' : ''}
-                    onClick={() => elegirTc(opt.id)}
-                  >
-                    {opt.label}: {opt.value.toFixed(2)}
-                  </button>
-                ))}
-              </div>
+              <label htmlFor="tc">Tipo de cambio BCB (USD → BOB)</label>
               <div className="tc-input">
                 <span>Bs</span>
                 <input
+                  id="tc"
                   type="number"
                   min="0"
                   step="0.01"
                   value={tc}
-                  onChange={(e) => onTcChange(e.target.value)}
-                  aria-label="Tipo de cambio personalizado"
+                  onChange={(e) => setTc(parseFloat(e.target.value) || 0)}
+                  aria-label="Tipo de cambio referencial BCB"
                 />
-                <em>BOB / USD</em>
+                <em>referencial</em>
               </div>
             </div>
           </div>
@@ -418,7 +385,7 @@ export default function App() {
             <div className="panel-head compact">
               <h2>Tendencia 24h ({cripto.short}/USD)</h2>
               {changePct != null && (
-                <span className={`pill ${changePct >= 0 ? 'up' : 'down'}`}>
+                <span className={`change ${changePct >= 0 ? 'up' : 'down'}`}>
                   {fmtPct.format(changePct)}% hoy
                 </span>
               )}
@@ -437,29 +404,14 @@ export default function App() {
           </section>
 
           <section className="panel">
-            <h2>Referencias USD en Bolivia</h2>
-            <ul className="refs">
-              <li>
-                <div>
-                  <strong>Oficial (BCB)</strong>
-                  <small>Tipo de cambio fijo</small>
-                </div>
-                <div className="refs-right">
-                  <em>Bs {TC.oficial.value.toFixed(2)}</em>
-                  <span className="tag muted">Oficial</span>
-                </div>
-              </li>
-              <li className="highlight">
-                <div>
-                  <strong>Mercado P2P / USDT</strong>
-                  <small>Referencia paralelo</small>
-                </div>
-                <div className="refs-right">
-                  <em>Bs {TC.paralelo.value.toFixed(2)}</em>
-                  <span className="tag live">Mercado</span>
-                </div>
-              </li>
-            </ul>
+            <h2>Tipo de cambio BCB</h2>
+            <div className="bcb-ref">
+              <div>
+                <strong>Referencial BCB</strong>
+                <small>USD → BOB</small>
+              </div>
+              <em>Bs {TC_BCB.toFixed(2)}</em>
+            </div>
           </section>
 
           <section className="panel">
@@ -483,7 +435,7 @@ export default function App() {
 
       <p className="nota">
         El precio proviene del par {cripto.symbol} en Binance (USDT ≈ USD). El tipo de
-        cambio a bolivianos es editable: elige Oficial, Paralelo o ajusta el valor manualmente.
+        cambio a bolivianos usa la referencia del BCB (Bs {TC_BCB.toFixed(2)}) y es editable.
       </p>
 
       <footer className="site-foot">
