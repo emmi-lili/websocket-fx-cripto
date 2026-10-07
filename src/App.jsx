@@ -17,7 +17,7 @@ const CRIPTOS = [
 ]
 
 /** Tipo de cambio referencial BCB (USD → BOB). */
-const TC_BCB = 6.96
+const TC_BCB = 11.97
 
 const QUICK = [0.1, 0.5, 1, 5]
 const SIDE_SYMBOLS = ['ETHUSDT', 'SOLUSDT']
