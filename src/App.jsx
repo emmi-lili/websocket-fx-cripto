@@ -221,20 +221,13 @@ export default function App() {
     <div className="shell">
       <header className="topbar">
         <div className="brand">
-          <div className="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 40 40" width="36" height="36">
-              <circle cx="20" cy="20" r="20" fill="#5b4dff" />
-              <path
-                d="M11 24 L17 16 L22 20 L29 12"
-                fill="none"
-                stroke="#fff"
-                strokeWidth="2.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <circle cx="29" cy="12" r="2.2" fill="#fff" />
-            </svg>
-          </div>
+          <img
+            className="brand-mark"
+            src="/logo-criptobob.png"
+            alt=""
+            width="44"
+            height="44"
+          />
           <div className="brand-text">
             <span className="brand-name">CriptoBOB</span>
           </div>
@@ -447,6 +440,7 @@ export default function App() {
             WebSocket API
           </a>
         </nav>
+        <p className="byline">by: emmcriptada</p>
       </footer>
     </div>
   )

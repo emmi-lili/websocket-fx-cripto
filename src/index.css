@@ -76,8 +76,12 @@ a {
 }
 
 .brand-mark {
-  display: grid;
-  place-items: center;
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 10px;
+  display: block;
+  flex-shrink: 0;
 }
 
 .brand-text {
@@ -606,6 +610,16 @@ a {
 
 .site-foot a:hover {
   color: var(--ink);
+}
+
+.byline {
+  width: 100%;
+  text-align: center;
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  letter-spacing: 0.01em;
 }
 
 @media (max-width: 900px) {
